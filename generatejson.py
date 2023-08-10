@@ -91,7 +91,6 @@ def get_listjson(path):
                 if len(parts)>7 and parts[7] == "Passed:":
                     writing = 0
                     loglines.append(completeloglines)
-            print(len(loglines))
             components = file_content.split('"')
             for it in components:
                 elements = it.split()
@@ -143,4 +142,4 @@ def get_listjson(path):
 
 path ="C://Users//laris//OneDrive//Desktop//AMD//Proiect//Teste"
 json_output = get_listjson(path)
-print(json_output)
+# print(json_output)
