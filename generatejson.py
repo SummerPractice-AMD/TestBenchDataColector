@@ -100,13 +100,34 @@ def get_testsrealtime(file_content):
             testsrealtimelist.append(words[4])
     return testsrealtimelist
 
+#returneaza o lista cu logline-urile testelor dintr-un fisier
+def get_logline(file_content, autorsname):
+    loglinelist = []
+    startwriting = 0
+    lines = file_content.split('\n')
+    for line in lines:
+        words = line.split()
+        if len(words) == 10 and words[5] == "execute":
+            logline = words[3] + " " + words[4] + " " + words[5] + " " + words[6] + " " + words[7] + " " + words[8] + " " + words[9] + "\n"
+            startwriting = 1
+        if startwriting == 1:
+            if len(words)>2 and words[2].split('.')[0] == autorsname:
+                for word in range(3, len(words)):
+                    logline = logline + words[word] + " "
+                logline = logline + '\n'
+            else:
+                for word in words:
+                    logline = logline + word + " "
+                logline = logline + '\n'
+        if len(words)== 11 and startwriting == 1 and words[10] == "packets":
+            logline = logline + words[3] + " " + words[4] + " " + words[5] + " " + words[6] + " " + words[7] + " " + words[8] + " " + words[9]+ " " + words[10] + "\n"
+            startwriting = 0
+            loglinelist.append(logline)
+    return loglinelist
 
 
 
-def get_logline(part_tests):
-    return part_tests
- 
-
+#returneaza o lista de obiecte json
 def get_listjson(path):
     filename_list = os.listdir(path)
     testsrun = []
@@ -135,24 +156,14 @@ def get_listjson(path):
             autorsname = get_autorsname(file_content)
 
             justneededpart = file_content.split("tests")
-            lineslist = justneededpart[0].split('\n')
-            logline = ""
-            startedwriting = 0
-            for line in lineslist:
-                parts = line.split()
-                if len(parts)>6 and parts[6] == "Running":
-                    logline = parts[3] + " " + parts[4] + " " + parts[5] + " " + parts[6] + " " + parts[7] + " " + parts[8] + " " + parts[9] + '\n'
-                    startedwriting = 1
-                if startedwriting == 1 and len(parts)>1 :
-                    logline = logline + " "
             testparts = justneededpart[0].split("Running")
             for eachtestpart in testparts:
                 if get_testname(eachtestpart, autorsname) != None:
                     testsname.append(get_testname(eachtestpart, autorsname))
-                    testslogline.append("a ")
             testsstatus = get_testsstatus(file_content)
             testssimtime = get_testssimtime(file_content)
             testsrealtime = get_testsrealtime(file_content)
+            testslogline = get_logline(file_content, autorsname)
             
             for testname, teststatus, testsimtime, testrealtime, testlogline in zip(testsname, testsstatus, testssimtime, testsrealtime, testslogline):
                 test = Tests(testname, teststatus, testsimtime, testrealtime, testlogline)
@@ -184,10 +195,11 @@ def get_listjson(path):
     json_output = TestRunsEncoder().encode(listjson)
     return json.loads(json_output)
 
+
 path ="C://Users//laris//OneDrive//Desktop//AMD//Proiect//Teste"
 json_output = get_listjson(path)
-output_json_file = "output5.json"
+output_json_file = "output.json"
 
 # Write the JSON content to the output file
 with open(output_json_file, "w") as outfile:
-    json.dump(json_output, outfile, indent=4) 
+    json.dump(json_output, outfile, indent=4)  
