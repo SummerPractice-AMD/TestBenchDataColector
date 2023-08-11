@@ -81,15 +81,15 @@ content = """     -.--ns INFO     cocotb.gpi                                  gp
 class TestFileParsing(unittest.TestCase):
     def test_get_errors(self):
         result = get_errors(content)
-        self.assertEqual(result, "1")
+        self.assertEqual(result, 1)
 
     def test_get_simtimefile(self):
         result = get_simtimefile(content)
-        self.assertEqual(result, "29225032000000000.00")
+        self.assertEqual(result, 29225032000000000.00)
 
     def test_get_realtimefile(self):
         result = get_realtimefile(content)
-        self.assertEqual(result, "3.97")
+        self.assertEqual(result, 3.97)
 
     def test_get_testname(self):
         result = []
@@ -106,11 +106,11 @@ class TestFileParsing(unittest.TestCase):
 
     def test_get_testssimtime(self):
         result = get_testssimtime(content)
-        self.assertEqual(result, ["775001000000000.00", "90001000000000.00"])
+        self.assertEqual(result, [775001000000000.00, 90001000000000.00])
 
     def test_get_testsrealtime(self):
         result = get_testsrealtime(content)
-        self.assertEqual(result, ["0.12", "0.02"])
+        self.assertEqual(result, [0.12, 0.02])
 #     def test_get_logline(self):
 #         result = get_logline(content)
 #         self.assertEqual(result, ["""regression.py:321  in execute                         Running test 21/32: run_test_021
@@ -134,7 +134,33 @@ class TestFileParsing(unittest.TestCase):
 # avalon.py:210  in _monitor_recv                   Received a packet of 58 bytes
 # avalon.py:210  in _monitor_recv                   Received a packet of 135 bytes
 # testbench.py:111  in run_test                        DUT correctly counted 10 packets""", 
-# ""])
+# """regression.py:321  in execute                         Running test 22/32: run_test_022
+# decorators.py:253  in _advance                        Starting test: "run_test_022"
+#                                                       Description: Automatically generated test
+                                                                                                                                
+#                                                       	backpressure_inserter: intermittent_single_cycles (Generator to intermittently insert a single cycle pulse)
+#                                                       	config_coroutine: randomly_switch_config (Twiddle the byteswapping config register)
+#                                                       	data_in: random_packet_sizes (random string data of a random length)
+#                                                       	idle_inserter: wave ()
+                                                                                                                                
+# scoreboard.py:216  in add_interface                   Created with reorder_depth 0
+# avalon.py:210  in _monitor_recv                   Received a packet of 22 bytes
+# avalon.py:210  in _monitor_recv                   Received a packet of 49 bytes
+# scoreboard.py:141  in compare                         Received transaction differed from expected output
+# scoreboard.py:145  in compare                         Expected:
+#                                                                                                                                 '\xfd\xa5\x1eJ\xea]q-\x1dp[p1"\x88\xa3\xc17;[\x84\xc9\x0c1\xec\xe1H\xf9\xb1\x1b4\xb9w\x18\xf3-\xa9\xaa\xb3-\xd0\xb6\xf4F\xf5\xb6\xf6\xbc\xff'
+# ..reboard.endian_swapper.stream_out       scoreboard.py:155  in compare                         Received:
+#                                                                                                                                 '\xfd\xa5\x1e\x95\xd4]q-\x1dp[\xe0b"\x88\xa3\xc17;\xb7\x08\xc9\x0c1\xec\xe1H\xf3c\x1b4\xb9w\x18\xf3[R\xaa\xb3-\xd0\xb6\xf4\x8d\xea\xb6\xf6\xbc\xff'
+# ..reboard.endian_swapper.stream_out       scoreboard.py:162  in compare                         Difference:
+#                                                                                                                                 0000      FDA51E4AEA5D712D 1D705B70312288A3 ...J.]q-.p[p1"..
+#                                                                                                                                      0000 FDA51E95D45D712D 1D705BE0622288A3 .....]q-.p[.b"..
+#                                                                                                                                 0010      C1373B5B84C90C31 ECE148F9B11B34B9 .7;[...1..H...4.
+#                                                                                                                                      0010 C1373BB708C90C31 ECE148F3631B34B9 .7;....1..H.c.4.
+#                                                                                                                                 0020      7718F32DA9AAB32D D0B6F446F5B6F6BC w..-...-...F....
+#                                                                                                                                      0020 7718F35B52AAB32D D0B6F48DEAB6F6BC w..[R..-........
+#                                                                                                                                 0030 0030 FF                                               .
+                                                                                                                                
+# regression.py:300  in handle_result                   Test Failed: run_test_022 (result was TestFailure)"""])
 
 if __name__ == '__main__':
     unittest.main()
