@@ -200,10 +200,10 @@ def get_listjson(path):
     return json.loads(json_output)
 
 
-path ="C://Users//laris//OneDrive//Desktop//AMD//Proiect//Teste"
+""" path ="C://Users//laris//OneDrive//Desktop//AMD//Proiect//Teste"
 json_output = get_listjson(path)
 output_json_file = "output111.json"
 
 # Write the JSON content to the output file
 with open(output_json_file, "w") as outfile:
-    json.dump(json_output, outfile, indent=4)  
+    json.dump(json_output, outfile, indent=4)   """
