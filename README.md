@@ -1,2 +1,4 @@
 # TestBenchDataColector
-Componenta DataColector
+Componenta DataColector-Colectarea si incarcarea datelor in MongoDB
+
+

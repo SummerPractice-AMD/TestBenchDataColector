@@ -19,7 +19,7 @@ def connect_to_database(config):
 def parse_command_line():
     parser = argparse.ArgumentParser(description="Collect and load test run data into MongoDB")
     parser.add_argument("--dir", required=True, help="Specify the directory containing test run files")
-    #linie de comanda dau file
+    #parser.add_argument("--file",required=True, help="Specify the test run file")
     return parser.parse_args()
 
 def main():
