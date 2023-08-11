@@ -36,21 +36,21 @@ def get_errors(file_content):
     parts = file_content.split("*************************************************************************************")
     part = parts[1].split()
     noerrors = part[3]
-    return noerrors
+    return int(noerrors)
 
 #returneaza simtime-ul continutului fisierului introdus
 def get_simtimefile(file_content):
     parts = file_content.split("*************************************************************************************")
     part = parts[2].split()
     simtimefile = part[4]
-    return simtimefile
+    return float(simtimefile)
 
 #returneaza realtime-ul continutului fisierului introdus
 def get_realtimefile(file_content):
     parts = file_content.split("*************************************************************************************")
     part = parts[2].split()
     realtimefile = part[11]
-    return realtimefile
+    return float(realtimefile)
     
 
 #returneaza numele autorului continutului fisierului introdus
@@ -87,7 +87,7 @@ def get_testssimtime(file_content):
     for line in lines:
         words = line.split()
         if len(words) == 7:
-            testssimtimelist.append(words[3])
+            testssimtimelist.append(float(words[3]))
     return testssimtimelist
 
 #returneaza o lista cu realtime-ul testelor dintr-un fisier
@@ -98,7 +98,7 @@ def get_testsrealtime(file_content):
     for line in lines:
         words = line.split()
         if len(words) == 7:
-            testsrealtimelist.append(words[4])
+            testsrealtimelist.append(float(words[4]))
     return testsrealtimelist
 
 #returneaza o lista cu logline-urile testelor dintr-un fisier
@@ -131,6 +131,9 @@ def get_logline(file_content):
             loglinelist.append(logline)
     return loglinelist
 
+
+
+# def parse(str):
 
 
 #returneaza o lista de obiecte json
