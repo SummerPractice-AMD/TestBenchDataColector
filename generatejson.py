@@ -61,7 +61,8 @@ def get_autorsname(file_content):
     return autorsname
 
 #returneaza numele testului sau None pentru prima linie din fisier
-def get_testname(part_tests, autorsname):
+def get_testname(part_tests):
+    autorsname = get_autorsname(part_tests)
     words = part_tests.split()
     testname = words[2]    
     if testname.split(".")[0] != autorsname:
@@ -101,16 +102,17 @@ def get_testsrealtime(file_content):
     return testsrealtimelist
 
 #returneaza o lista cu logline-urile testelor dintr-un fisier
-def get_logline(file_content, autorsname):
+def get_logline(file_content):
+    autorsname = get_autorsname(file_content)
     loglinelist = []
     startwriting = 0
     lines = file_content.split('\n')
     for line in lines:
         words = line.split()
         if len(words) == 10 and words[5] == "execute":
-            logline = words[3] + " " + words[4] + " " + words[5] + " " + words[6] + " " + words[7] + " " + words[8] + " " + words[9] + "\n"
+            logline = ""
             startwriting = 1
-        if startwriting == 1:
+        if startwriting == 1 :
             if len(words)>2 and words[2].split('.')[0] == autorsname:
                 for word in range(3, len(words)):
                     logline = logline + words[word] + " "
@@ -119,8 +121,12 @@ def get_logline(file_content, autorsname):
                 for word in words:
                     logline = logline + word + " "
                 logline = logline + '\n'
-        if len(words)== 11 and startwriting == 1 and words[10] == "packets":
-            logline = logline + words[3] + " " + words[4] + " " + words[5] + " " + words[6] + " " + words[7] + " " + words[8] + " " + words[9]+ " " + words[10] + "\n"
+        if len(words) == 11 and startwriting == 1 and words[10] == "packets":
+            logline = logline + words[3] + " " + words[4] + " " + words[5] + " " + words[6] + " " + words[7] + " " + words[8] + " " + words[9] + " " + words[10] + "\n"
+            startwriting = 0
+            loglinelist.append(logline)
+        if len(words) == 12 and startwriting == 1 and words[7] == "Failed:":
+            logline = logline + words[3] + " " + words[4] + " " + words[5] + " " + words[6] + " " + words[7] + " " + words[8] + " " + words[9] + " " + words[10] + " " + words[11] + "\n"
             startwriting = 0
             loglinelist.append(logline)
     return loglinelist
@@ -152,18 +158,16 @@ def get_listjson(path):
             tests = []
             testsname = []
             testslogline = []
-            
-            autorsname = get_autorsname(file_content)
 
             justneededpart = file_content.split("tests")
             testparts = justneededpart[0].split("Running")
             for eachtestpart in testparts:
-                if get_testname(eachtestpart, autorsname) != None:
-                    testsname.append(get_testname(eachtestpart, autorsname))
+                if get_testname(eachtestpart) != None:
+                    testsname.append(get_testname(eachtestpart))
             testsstatus = get_testsstatus(file_content)
             testssimtime = get_testssimtime(file_content)
             testsrealtime = get_testsrealtime(file_content)
-            testslogline = get_logline(file_content, autorsname)
+            testslogline = get_logline(file_content)
             
             for testname, teststatus, testsimtime, testrealtime, testlogline in zip(testsname, testsstatus, testssimtime, testsrealtime, testslogline):
                 test = Tests(testname, teststatus, testsimtime, testrealtime, testlogline)
@@ -198,7 +202,7 @@ def get_listjson(path):
 
 path ="C://Users//laris//OneDrive//Desktop//AMD//Proiect//Teste"
 json_output = get_listjson(path)
-output_json_file = "output.json"
+output_json_file = "output111.json"
 
 # Write the JSON content to the output file
 with open(output_json_file, "w") as outfile:
