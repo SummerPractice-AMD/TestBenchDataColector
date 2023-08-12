@@ -27,7 +27,7 @@ def main():
     json_output = get_listjson(args.dir)
     config=load_config("config.yml")
     loader=connect_to_database(config)
-    loader.load_from_json(json_output)
+    loader.load_from_json_list(json_output)
     #json_output=get_listjson("C:\\Users\\adina\\Downloads\\regression-runs")
     #json_output=get_listjson("C://Users//adina//Downloads//PracticaAMD-Proiect")
     #output_json_file = "json_data.json"
