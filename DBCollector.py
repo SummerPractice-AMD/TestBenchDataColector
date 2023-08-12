@@ -1,5 +1,5 @@
 import argparse
-from generatejson import get_listjson
+from generatejson import get_listjson, parsedir, parsefile
 from introducereDB import DatabaseLoader
 import json
 import yaml
@@ -18,16 +18,26 @@ def connect_to_database(config):
 
 def parse_command_line():
     parser = argparse.ArgumentParser(description="Collect and load test run data into MongoDB")
-    parser.add_argument("--dir", required=True, help="Specify the directory containing test run files")
-    #parser.add_argument("--file",required=True, help="Specify the test run file")
+    parser.add_argument("--dir",  help="Specify the directory containing test run files")
+    parser.add_argument("--file", help="Specify the test run file")
     return parser.parse_args()
 
 def main():
     args=parse_command_line()
-    json_output = get_listjson(args.dir)
+    #json_output = get_listjson(args.dir)
+
     config=load_config("config.yml")
     loader=connect_to_database(config)
-    loader.load_from_json_list(json_output)
+
+    if args.dir:
+         json_output=parsedir(args.dir)
+         loader.load_from_json_list(json_output)
+    elif args.file:
+        json_output_from_file=parsefile(args.file)
+        loader.load_from_json(json_output_from_file)
+    else:
+        print("Specify either --dir or --file option.")
+        
     #json_output=get_listjson("C:\\Users\\adina\\Downloads\\regression-runs")
     #json_output=get_listjson("C://Users//adina//Downloads//PracticaAMD-Proiect")
     #output_json_file = "json_data.json"

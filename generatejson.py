@@ -265,7 +265,7 @@ def get_listjson(path):
     return json.loads(json_output)
 
 
-path ="C://Users//laris//OneDrive//Desktop//AMD//Proiect//Teste"
+""" path ="C://Users//laris//OneDrive//Desktop//AMD//Proiect//Teste"
 # stem = get_filename(file, path)
 file_to_open = Path("C://Users//laris//OneDrive//Desktop//AMD//Proiect//Teste//12.txt")
 # file_to_open = Path(path) / file
@@ -278,4 +278,4 @@ output_json_file = "outtt.json"
 
 # Write the JSON content to the output file
 with open(output_json_file, "w") as outfile:
-    json.dump(json_output, outfile, indent=4)
+    json.dump(json_output, outfile, indent=4) """
