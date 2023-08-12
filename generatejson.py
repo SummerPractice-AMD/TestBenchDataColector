@@ -134,8 +134,8 @@ def get_logline(file_content):
 
 
 #primeste un string si returneaza un obiect tip Json
-def parse(string, filename):
-    name = filename
+def parse(string):
+    name = str(uuid.uuid1())
     errors = get_errors(string)
     simtime = get_simtimefile(string)
     realtime = get_realtimefile(string)
@@ -176,13 +176,26 @@ def parse(string, filename):
     json_output = TestRunsEncoder().encode(output_testrun)
     return json.loads(json_output)
 
-#primeste un file si returneaza un obiect tip Json
-# def parsefile(filename):
-#     name = get_filename(filename)
-#     with open(file_to_open, "r") as file:
-#         file_content = file.read()
-#     json_output = parse(file_content)
-#     return json_output
+# primeste un file si returneaza un obiect tip Json
+def parsefile(filename):
+    path = Path(filename)
+    name = get_filename(path, path.parent)
+    with open(filename, "r") as file:
+        file_content = file.read()
+    json_output = parse(file_content)
+    json_output['filename'] = name
+    return json_output
+
+# primeste un dir si returneaza un obiect tip Json
+def parsedir(dirname):
+    listjson = []
+    filename_list = os.listdir(dirname)
+    for file in filename_list:
+        if file.endswith(".txt"):
+            file_to_open = Path(dirname) / file
+            listjson.append(parsefile(file_to_open))
+    json_output = TestRunsEncoder().encode(listjson)
+    return json.loads(json_output)
     
 
 #returneaza o lista de obiecte json
@@ -256,12 +269,12 @@ path ="C://Users//laris//OneDrive//Desktop//AMD//Proiect//Teste"
 # stem = get_filename(file, path)
 file_to_open = Path("C://Users//laris//OneDrive//Desktop//AMD//Proiect//Teste//12.txt")
 # file_to_open = Path(path) / file
-filename = "12"
-with open(file_to_open, "r") as file:
-    file_content = file.read()
+# filename = "12"
+# with open(file_to_open, "r") as file:
+#     file_content = file.read()
 
-json_output = parse(file_content, filename)
-output_json_file = "output111.json"
+json_output = parsedir(path)
+output_json_file = "outtt.json"
 
 # Write the JSON content to the output file
 with open(output_json_file, "w") as outfile:
