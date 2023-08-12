@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 from json import JSONEncoder
 from typing import Any
+import uuid
 
 
 class TestRuns:
@@ -132,9 +133,57 @@ def get_logline(file_content):
     return loglinelist
 
 
+#primeste un string si returneaza un obiect tip Json
+def parse(string, filename):
+    name = filename
+    errors = get_errors(string)
+    simtime = get_simtimefile(string)
+    realtime = get_realtimefile(string)
+    tests = []
+    testsname = []
+    testslogline = []
+    justneededpart = string.split("tests")
+    testparts = justneededpart[0].split("Running")
+    for eachtestpart in testparts:
+        if get_testname(eachtestpart) != None:
+            testsname.append(get_testname(eachtestpart))
+    testsstatus = get_testsstatus(string)
+    testssimtime = get_testssimtime(string)
+    testsrealtime = get_testsrealtime(string)
+    testslogline = get_logline(string)
+            
+    for testname, teststatus, testsimtime, testrealtime, testlogline in zip(testsname, testsstatus, testssimtime, testsrealtime, testslogline):
+        test = Tests(testname, teststatus, testsimtime, testrealtime, testlogline)
+        tests.append(test)
 
-# def parse(str):
+    testrun = TestRuns(name, tests, errors, simtime, realtime)
+    output_testrun = {
+        "filename": testrun.filename,
+        "tests": [],
+        "errors": testrun.errors,
+        "simtimefile": testrun.simtimefile,
+        "realtimefile": testrun.realtimefile
+    }
+    for test in testrun.tests:
+        output_test = {
+            "testname": test.testname,
+            "status": test.status,
+            "simtime": test.simtime,
+            "realtime": test.realtime,
+            "logline": test.logline
+        }
+        output_testrun["tests"].append(output_test)
+    json_output = TestRunsEncoder().encode(output_testrun)
+    return json.loads(json_output)
 
+#primeste un file si returneaza un obiect tip Json
+# def parsefile(filename):
+#     name = get_filename(filename)
+#     with open(file_to_open, "r") as file:
+#         file_content = file.read()
+#     json_output = parse(file_content)
+#     return json_output
+    
 
 #returneaza o lista de obiecte json
 def get_listjson(path):
@@ -203,10 +252,17 @@ def get_listjson(path):
     return json.loads(json_output)
 
 
-""" path ="C://Users//laris//OneDrive//Desktop//AMD//Proiect//Teste"
-json_output = get_listjson(path)
+path ="C://Users//laris//OneDrive//Desktop//AMD//Proiect//Teste"
+# stem = get_filename(file, path)
+file_to_open = Path("C://Users//laris//OneDrive//Desktop//AMD//Proiect//Teste//12.txt")
+# file_to_open = Path(path) / file
+filename = "12"
+with open(file_to_open, "r") as file:
+    file_content = file.read()
+
+json_output = parse(file_content, filename)
 output_json_file = "output111.json"
 
 # Write the JSON content to the output file
 with open(output_json_file, "w") as outfile:
-    json.dump(json_output, outfile, indent=4)   """
+    json.dump(json_output, outfile, indent=4)
